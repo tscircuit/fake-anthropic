@@ -1,6 +1,7 @@
 {
-  "name": "debug-api",
-  "module": "index.ts",
+  "name": "@tscircuit/fake-anthropic",
+  "main": "dist/bundle.js",
+  "version": "0.0.1",
   "type": "module",
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.33.1",
