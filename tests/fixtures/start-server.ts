@@ -28,6 +28,7 @@ export const startServer = async ({
 
   const server = Bun.serve({
     fetch: (bunReq) => {
+      console.log(bunReq.url)
       const req = new EdgeRuntimeRequest(bunReq.url, {
         headers: bunReq.headers,
         method: bunReq.method,
