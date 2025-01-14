@@ -22,5 +22,9 @@ jobs:
       - name: Install dependencies
         run: bun i
 
+      - name: Build before type checking (code uses dist/bundle)
+        run: bun run build
+
       - name: Run type check
         run: bunx tsc --noEmit
+
