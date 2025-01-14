@@ -1,5 +1,4 @@
 import { createStore, type StoreApi } from "zustand/vanilla"
-import { immer } from "zustand/middleware/immer"
 import { hoist, type HoistedStoreApi } from "zustand-hoist"
 
 import { databaseSchema, type DatabaseSchema, type Thing } from "./schema.ts"
