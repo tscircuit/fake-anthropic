@@ -127,9 +127,9 @@ To integrate `fake-anthropic` in your tests, follow these steps:
    });
    ```
 
-## Mocking external services using `fake-anthropic`
+## Fake external services using `fake-anthropic`
 
-To mock external services using `fake-anthropic`, you can create a fake implementation of the Anthropic API and use it in your tests. This allows you to simulate interactions with the Anthropic service without making real API calls.
+To Fake external services using `fake-anthropic`, you can create a fake implementation of the Anthropic API and use it in your tests. This allows you to simulate interactions with the Anthropic service without making real API calls.
 
 1. Create a fake implementation of the Anthropic API in `routes/v1/messages/index.ts`:
    ```ts
@@ -196,16 +196,6 @@ To mock external services using `fake-anthropic`, you can create a fake implemen
      return ctx.json(response);
    });
    ```
-
-## Effective testing strategies
-
-Here are some effective testing strategies to consider when using `fake-anthropic`:
-
-* Use snapshot testing to ensure that the responses from the fake Anthropic API match the expected output. This can help you catch any unexpected changes in the API responses.
-* Isolate your tests by using a separate test database for each test run. This can help you avoid conflicts and ensure that your tests are independent of each other.
-* Use middleware to inject dependencies, such as the database client, into your test context. This can help you keep your tests clean and maintainable.
-* Mock external services to simulate different scenarios and edge cases. This can help you test your application's behavior under various conditions.
-
 > [!NOTE]
 >
 > For more information on effective testing strategies, refer to the blog post: [Talking to External Services](https://seve.blog/p/a-simple-pattern-for-api-testing?open=false#%C2%A7talking-to-external-services-spoiler-use-fakes).
