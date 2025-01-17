@@ -13,96 +13,104 @@
 
 3. Set up the test server in `tests/fixtures/get-test-server.ts`:
    ```ts
-   import { afterEach } from "bun:test";
-   import defaultAxios from "redaxios";
-   import { startServer } from "./start-server";
+    import { afterEach } from "bun:test";
+    import defaultAxios from "redaxios";
+    import { startServer } from "./start-server";
+    import ky from "ky";
 
-   interface TestFixture {
-     url: string;
-     server: any;
-     axios: typeof defaultAxios;
-   }
 
-   export const getTestServer = async (): Promise<TestFixture> => {
-     const port = 3001 + Math.floor(Math.random() * 999);
-     const testInstanceId = Math.random().toString(36).substring(2, 15);
-     const testDbName = `testdb${testInstanceId}`;
+    interface TestFixture {
+      url: string;
+      server: any;
+      axios: typeof defaultAxios;
+    }
 
-     const server = await startServer({
-       port,
-       testDbName,
-     });
+    export const getTestServer = async (): Promise<TestFixture> => {
+      const port = 3001 + Math.floor(Math.random() * 999);
+      const testInstanceId = Math.random().toString(36).substring(2, 15);
+      const testDbName = `testdb${testInstanceId}`;
 
-     const url = `http://127.0.0.1:${port}`;
-     const axios = defaultAxios.create({
-       baseURL: url,
-     });
+      const server = await startServer({
+        port,
+        testDbName,
+      });
 
-     afterEach(async () => {
-       await server.stop();
-     });
+      const url = `http://127.0.0.1:${port}`;
+      const axios = defaultAxios.create({
+        baseURL: url,
+      });
 
-     return {
-       url,
-       server,
-       axios,
-     };
-   };
+      afterEach(async () => {
+        await server.stop();
+      });
+
+      return {
+        url,
+        server,
+        axios: ky.create({
+          prefixUrl: url,
+        }),
+      };
+    };
    ```
 
-## Integrating `fake-anthropic` in tests
+## Using `fake-anthropic` in other application tests
 
-To integrate `fake-anthropic` in your tests, follow these steps:
+To use the `fake-anthropic` bundle in other application tests, follow these steps:
 
-1. Create a test for the Anthropic SDK usage in `tests/usage/usage1-anthropic-sdk.test.ts`:
-   ```ts
-   import { test, expect } from "bun:test";
-   import Anthropic from "@anthropic-ai/sdk";
-   import { getTestServer } from "tests/fixtures/get-test-server";
-   import { normalizeForSnapshot } from "tests/fixtures/normalizeForSnapshot";
+1. Install the `fake-anthropic` package in your application:
+  ```sh
+  npm install @tscircuit/fake-anthropic
+  ```
 
-   test("basic anthropic sdk usage", async () => {
-     const { url } = await getTestServer();
-     const anthropic = new Anthropic({
-       apiKey: "fake-anthropic-api-key",
-       baseURL: url,
-     });
+2. Import and use the `fake-anthropic` bundle in your test file:
+  ```ts
+  import { test, expect } from "bun:test";
+  import { getTestServer } from "tests/fixtures/get-test-server";
+  import { normalizeForSnapshot } from "tests/fixtures/normalizeForSnapshot";
+  import { Anthropic } from "@tscircuit/fake-anthropic/dist/bundle";
 
-     const message = await anthropic.messages.create({
-       model: "claude-3-5-haiku-20241022",
-       max_tokens: 1024,
-       messages: [
-         {
-           role: "user",
-           content: "Say hello world!",
-         },
-       ],
-     });
+  test("integration test with fake-anthropic", async () => {
+    const { url } = await getTestServer();
+    const anthropic = new Anthropic({
+     apiKey: "fake-anthropic-api-key",
+     baseURL: url,
+    });
 
-     expect(normalizeForSnapshot(message)).toMatchInlineSnapshot(`
-     {
-       "content": [
-         {
-           "text": "Hello world!",
-           "type": "text",
-         },
-       ],
-       "id": "[id]",
-       "model": "claude-3-5-haiku-20241022",
-       "role": "assistant",
-       "stop_reason": "end_turn",
-       "stop_sequence": null,
-       "type": "message",
-       "usage": {
-         "cache_creation_input_tokens": 0,
-         "cache_read_input_tokens": 0,
-         "input_tokens": 0,
-         "output_tokens": 0,
-       },
-     }
-     `);
-   });
-   ```
+    const message = await anthropic.messages.create({
+     model: "claude-3-5-haiku-20241022",
+     max_tokens: 1024,
+     messages: [
+      {
+        role: "user",
+        content: "Say hello world!",
+      },
+     ],
+    });
+
+    expect(normalizeForSnapshot(message)).toMatchInlineSnapshot(
+    {
+     "content": [
+      {
+        "text": "Hello world!",
+        "type": "text",
+      },
+     ],
+     "id": "[id]",
+     "model": "claude-3-5-haiku-20241022",
+     "role": "assistant",
+     "stop_reason": "end_turn",
+     "stop_sequence": null,
+     "type": "message",
+     "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+     },
+    });
+  });
+  ```
 
 ## Fake external services using `fake-anthropic`
 
@@ -173,6 +181,8 @@ To Fake external services using `fake-anthropic`, you can create a fake implemen
      return ctx.json(response);
    });
    ```
+
+
 > [!NOTE]
 >
 > For more information on effective testing strategies, refer to the blog post: [Talking to External Services](https://seve.blog/p/a-simple-pattern-for-api-testing?open=false#%C2%A7talking-to-external-services-spoiler-use-fakes).
