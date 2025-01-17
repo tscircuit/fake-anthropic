@@ -10,29 +10,6 @@
 
 ## Setting up the test environment
 
-To set up the test environment for `fake-anthropic`, follow these steps:
-
-1. Install the necessary dependencies:
-   ```sh
-   bun install
-   ```
-
-2. Ensure you have the required configuration in your `tsconfig.json`:
-   ```json
-   {
-     "compilerOptions": {
-       "lib": ["ESNext", "DOM"],
-       "target": "ESNext",
-       "module": "ESNext",
-       "moduleResolution": "bundler",
-       "strict": true,
-       "esModuleInterop": true,
-       "resolveJsonModule": true
-     },
-     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-     "exclude": ["node_modules"]
-   }
-   ```
 
 3. Set up the test server in `tests/fixtures/get-test-server.ts`:
    ```ts
