@@ -4,10 +4,6 @@
 
 `@tscircuit/fake-anthropic` is a library designed to facilitate testing by providing a fake implementation of the Anthropic API. This allows developers to test their applications without making actual calls to the Anthropic service. This README will guide you through setting up the test environment, integrating `fake-anthropic` in your tests, mocking external services, and effective testing strategies.
 
-## What is `fake-anthropic`?
-
-`fake-anthropic` is a library that provides a fake implementation of the Anthropic API. It is useful for testing purposes, allowing you to simulate interactions with the Anthropic service without making real API calls. This can help you test your application's behavior in a controlled environment.
-
 ## Setting up the test environment
 
 
@@ -60,7 +56,7 @@ To use the `fake-anthropic` bundle in other application tests, follow these step
 
 1. Install the `fake-anthropic` package in your application:
   ```sh
-  npm install @tscircuit/fake-anthropic
+  bun add @tscircuit/fake-anthropic
   ```
 
 2. Import and use the `fake-anthropic` bundle in your test file:
